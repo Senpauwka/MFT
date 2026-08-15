@@ -789,3 +789,16 @@ button {
 .workout-start-button {
     margin-top: 2px;
 }
+
+/* =========================================================
+   FIX: СТРАНИЦА ТРЕНИРОВОК
+========================================================= */
+
+#workoutsPage.active {
+    display: block;
+    padding: 20px;
+}
+
+#workoutsPage:not(.active) {
+    display: none;
+}
