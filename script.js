@@ -311,3 +311,37 @@ function init() {
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", init);
+
+/* =========================================================
+   КНОПКИ ТРЕНИРОВОК
+========================================================= */
+
+const workoutButtons =
+    document.querySelectorAll(".workout-start-button");
+
+
+workoutButtons.forEach((button, index) => {
+
+    button.addEventListener("click", () => {
+
+        const workouts = [
+            appData.workouts.monday,
+            appData.workouts.wednesday,
+            appData.workouts.friday
+        ];
+
+        const workout = workouts[index];
+
+        if (!workout) {
+            return;
+        }
+
+        alert(
+            `${workout.icon} ${workout.title}\n\n` +
+            `Упражнений: ${workout.exercises.length}\n\n` +
+            "Следующим этапом здесь появится полноценный режим тренировки."
+        );
+
+    });
+
+});
