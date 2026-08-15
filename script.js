@@ -1133,3 +1133,374 @@ document.addEventListener(
 
     }
 );
+
+/* =========================================================
+   АКТИВНАЯ ТРЕНИРОВКА
+========================================================= */
+
+let activeWorkout = null;
+let activeExerciseIndex = 0;
+
+
+/* Данные упражнений */
+
+const exerciseDetails = {
+
+    "Подтягивания": {
+        icon: "🪽",
+        muscles: "Спина · Бицепс",
+        sets: 4
+    },
+
+    "Отжимания": {
+        icon: "🫀",
+        muscles: "Грудь · Трицепс · Плечи",
+        sets: 4
+    },
+
+    "Брусья": {
+        icon: "🔱",
+        muscles: "Грудь · Трицепс",
+        sets: 3
+    },
+
+    "Пайк-отжимания": {
+        icon: "🏋️",
+        muscles: "Плечи · Трицепс",
+        sets: 3
+    },
+
+    "Подъёмы ног": {
+        icon: "🧱",
+        muscles: "Пресс · Корпус",
+        sets: 3
+    },
+
+    "Болгарские приседания": {
+        icon: "🦵",
+        muscles: "Квадрицепс · Ягодицы",
+        sets: 3
+    },
+
+    "Приседания": {
+        icon: "🦵",
+        muscles: "Ноги · Ягодицы",
+        sets: 3
+    },
+
+    "Выпады": {
+        icon: "🦵",
+        muscles: "Ноги · Ягодицы",
+        sets: 3
+    },
+
+    "Подъёмы на носки": {
+        icon: "🦶",
+        muscles: "Икры",
+        sets: 3
+    },
+
+    "Планка": {
+        icon: "🧱",
+        muscles: "Пресс · Корпус",
+        sets: 3
+    },
+
+    "Пресс": {
+        icon: "🧱",
+        muscles: "Корпус",
+        sets: 3
+    }
+
+};
+
+
+/* =========================================================
+   ПОКАЗ АКТИВНОЙ ТРЕНИРОВКИ
+========================================================= */
+
+function startWorkout(workout) {
+
+    if (!workout) {
+        return;
+    }
+
+    activeWorkout = workout;
+
+    activeExerciseIndex = 0;
+
+    showPage("activeWorkoutPage");
+
+    renderActiveExercise();
+}
+
+
+/* =========================================================
+   ОТРИСОВКА УПРАЖНЕНИЯ
+========================================================= */
+
+function renderActiveExercise() {
+
+    if (!activeWorkout) {
+        return;
+    }
+
+    const exerciseName =
+        activeWorkout.exercises[activeExerciseIndex];
+
+    const details =
+        exerciseDetails[exerciseName] || {
+            icon: "💪",
+            muscles: "Мышцы корпуса",
+            sets: 3
+        };
+
+
+    const title =
+        document.getElementById("activeWorkoutTitle");
+
+    const subtitle =
+        document.getElementById("activeWorkoutSubtitle");
+
+    const icon =
+        document.getElementById("activeExerciseIcon");
+
+    const name =
+        document.getElementById("activeExerciseName");
+
+    const muscles =
+        document.getElementById("activeExerciseMuscles");
+
+    const progress =
+        document.getElementById("exerciseProgress");
+
+    const progressFill =
+        document.getElementById("workoutProgressFill");
+
+    const setList =
+        document.getElementById("setList");
+
+
+    title.textContent = activeWorkout.title;
+
+    subtitle.textContent =
+        "Делай чисто. Не спеши. Качество важнее количества.";
+
+    icon.textContent = details.icon;
+
+    name.textContent = exerciseName;
+
+    muscles.textContent = details.muscles;
+
+
+    const current =
+        activeExerciseIndex + 1;
+
+    const total =
+        activeWorkout.exercises.length;
+
+
+    progress.textContent =
+        `${current} / ${total}`;
+
+
+    progressFill.style.width =
+        `${(current / total) * 100}%`;
+
+
+    setList.innerHTML = "";
+
+
+    for (let i = 1; i <= details.sets; i++) {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "set-row";
+
+        row.innerHTML = `
+            <span>Подход ${i}</span>
+            <strong>Готов</strong>
+        `;
+
+        setList.appendChild(row);
+    }
+
+}
+
+
+/* =========================================================
+   ЗАВЕРШЕНИЕ УПРАЖНЕНИЯ
+========================================================= */
+
+const completeExerciseButton =
+    document.getElementById("completeExerciseButton");
+
+
+if (completeExerciseButton) {
+
+    completeExerciseButton.addEventListener(
+        "click",
+        () => {
+
+            if (!activeWorkout) {
+                return;
+            }
+
+
+            activeExerciseIndex++;
+
+
+            if (
+                activeExerciseIndex >=
+                activeWorkout.exercises.length
+            ) {
+
+                alert(
+                    "🔥 Тренировка завершена!\n\n" +
+                    "Красиво отработал. Теперь сохраняем результат."
+                );
+
+                activeWorkout = null;
+
+                showPage("homePage");
+
+                return;
+            }
+
+
+            renderActiveExercise();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ВЫХОД ИЗ ТРЕНИРОВКИ
+========================================================= */
+
+const exitWorkoutButton =
+    document.getElementById("exitWorkoutButton");
+
+
+if (exitWorkoutButton) {
+
+    exitWorkoutButton.addEventListener(
+        "click",
+        () => {
+
+            const confirmExit =
+                confirm(
+                    "Выйти из текущей тренировки?"
+                );
+
+            if (!confirmExit) {
+                return;
+            }
+
+            activeWorkout = null;
+
+            showPage("homePage");
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ПЕРЕХВАТ КНОПОК "НАЧАТЬ ТРЕНИРОВКУ"
+========================================================= */
+
+document.addEventListener(
+    "click",
+    (event) => {
+
+        const button =
+            event.target.closest(
+                ".primary-button"
+            );
+
+
+        if (!button) {
+            return;
+        }
+
+
+        /*
+            Кнопки внутри карточек Пн / Ср / Пт
+        */
+
+        if (
+            button.classList.contains(
+                "workout-start-button"
+            )
+        ) {
+
+            const cards =
+                document.querySelectorAll(
+                    ".workout-day-card"
+                );
+
+            const card =
+                button.closest(
+                    ".workout-day-card"
+                );
+
+            const index =
+                Array.from(cards).indexOf(card);
+
+
+            const workouts = [
+                appData.workouts.monday,
+                appData.workouts.wednesday,
+                appData.workouts.friday
+            ];
+
+
+            startWorkout(
+                workouts[index]
+            );
+
+            return;
+        }
+
+
+        /*
+            Кнопка "Начать тренировку"
+            на главной странице
+        */
+
+        if (
+            button.closest(".today-card")
+        ) {
+
+            const workout =
+                getTodayWorkout();
+
+
+            if (!workout) {
+
+                alert(
+                    "Сегодня день восстановления 🧘\n\n" +
+                    "Отдых тоже является частью прогресса."
+                );
+
+                return;
+            }
+
+
+            startWorkout(workout);
+
+        }
+
+    },
+    true
+);
