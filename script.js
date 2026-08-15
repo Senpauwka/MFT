@@ -345,3 +345,40 @@ workoutButtons.forEach((button, index) => {
     });
 
 });
+
+/* =========================================================
+   НАДЁЖНАЯ НАВИГАЦИЯ СТРАНИЦ
+========================================================= */
+
+document.addEventListener("click", function (event) {
+
+    const button = event.target.closest(".nav-item");
+
+    if (!button) {
+        return;
+    }
+
+    const pageId = button.dataset.page;
+    const target = document.getElementById(pageId);
+
+    if (!target) {
+        console.error("Страница не найдена:", pageId);
+        return;
+    }
+
+    document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+        page.style.display = "none";
+    });
+
+    target.classList.add("active");
+    target.style.display = "block";
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    window.scrollTo(0, 0);
+});
