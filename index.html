@@ -443,6 +443,108 @@
 
     </div>
 
+<!-- =====================================================
+     ЭКРАН АКТИВНОЙ ТРЕНИРОВКИ
+====================================================== -->
+
+<section class="page" id="activeWorkoutPage">
+
+    <div class="page-header">
+
+        <span class="card-label">АКТИВНАЯ ТРЕНИРОВКА</span>
+
+        <h2 id="activeWorkoutTitle">
+            Тренировка
+        </h2>
+
+        <p id="activeWorkoutSubtitle">
+            Работаем спокойно и качественно.
+        </p>
+
+    </div>
+
+
+    <!-- Прогресс тренировки -->
+
+    <div class="workout-progress-card">
+
+        <div class="workout-progress-top">
+
+            <span>ПРОГРЕСС</span>
+
+            <strong id="exerciseProgress">
+                1 / 5
+            </strong>
+
+        </div>
+
+        <div class="progress-track">
+
+            <div
+                class="progress-fill"
+                id="workoutProgressFill"
+                style="width: 20%;">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Текущее упражнение -->
+
+    <div class="active-exercise-card">
+
+        <div class="active-exercise-icon" id="activeExerciseIcon">
+            💪
+        </div>
+
+        <span class="card-label">
+            ТЕКУЩЕЕ УПРАЖНЕНИЕ
+        </span>
+
+        <h3 id="activeExerciseName">
+            Подтягивания
+        </h3>
+
+        <p id="activeExerciseMuscles">
+            Спина · Бицепс
+        </p>
+
+
+        <!-- Подходы -->
+
+        <div
+            class="set-list"
+            id="setList">
+        </div>
+
+
+        <button
+            class="primary-button"
+            id="completeExerciseButton">
+
+            Завершить упражнение
+
+            <span>→</span>
+
+        </button>
+
+    </div>
+
+
+    <!-- Выход -->
+
+    <button
+        class="secondary-button"
+        id="exitWorkoutButton">
+
+        Выйти из тренировки
+
+    </button>
+
+</section>
+
     <!-- JavaScript -->
     <script src="script.js"></script>
 
