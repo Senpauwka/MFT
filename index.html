@@ -1,1 +1,195 @@
- 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Моя форма</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         ОСНОВНОЕ ПРИЛОЖЕНИЕ
+    ========================== -->
+
+    <div class="app">
+
+        <!-- Верхняя часть -->
+        <header class="topbar">
+            <div>
+                <span class="topbar-label">ЛИЧНЫЙ ТРЕКЕР</span>
+                <h1>Моя форма</h1>
+            </div>
+
+            <button class="profile-button" aria-label="Профиль">
+                <span>⚙</span>
+            </button>
+        </header>
+
+
+        <!-- =========================
+             ГЛАВНАЯ СТРАНИЦА
+        ========================== -->
+
+        <main class="page active" id="homePage">
+
+            <!-- Приветствие -->
+            <section class="welcome">
+                <p class="muted">ВОЗВРАЩАЙСЯ К СЕБЕ</p>
+
+                <h2>
+                    Становись сильнее.<br>
+                    День за днём.
+                </h2>
+
+                <p class="description">
+                    Тренировки, цели и прогресс —
+                    всё в одном месте.
+                </p>
+            </section>
+
+
+            <!-- Сегодняшняя тренировка -->
+            <section class="today-card">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="card-label">СЕГОДНЯ</span>
+                        <h3>Тренировка</h3>
+                    </div>
+
+                    <span class="day-badge">СР</span>
+                </div>
+
+                <div class="workout-preview">
+
+                    <div class="workout-icon">
+                        🦵
+                    </div>
+
+                    <div class="workout-info">
+                        <h4>Ноги + корпус</h4>
+
+                        <p>
+                            5 упражнений · примерно 40 минут
+                        </p>
+                    </div>
+
+                </div>
+
+                <button class="primary-button">
+                    Начать тренировку
+                    <span>→</span>
+                </button>
+
+            </section>
+
+
+            <!-- Быстрая статистика -->
+            <section class="stats-section">
+
+                <div class="section-title-row">
+                    <h3>Твой прогресс</h3>
+                    <span>Всего</span>
+                </div>
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+                        <span class="stat-icon">🔥</span>
+                        <strong>0</strong>
+                        <p>тренировок</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">💪</span>
+                        <strong>0</strong>
+                        <p>дней серии</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">🏆</span>
+                        <strong>0</strong>
+                        <p>личных рекордов</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <span class="stat-icon">⏱</span>
+                        <strong>0</strong>
+                        <p>минут тренировок</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Ближайшая цель -->
+            <section class="goal-card">
+
+                <div class="section-title-row">
+                    <div>
+                        <span class="card-label">БЛИЖАЙШАЯ ЦЕЛЬ</span>
+                        <h3>10 чистых подтягиваний</h3>
+                    </div>
+
+                    <span class="goal-percent">0%</span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+
+                <p class="goal-description">
+                    Первый шаг — просто начать.
+                </p>
+
+            </section>
+
+        </main>
+
+
+        <!-- =========================
+             НИЖНЯЯ НАВИГАЦИЯ
+        ========================== -->
+
+        <nav class="bottom-navigation">
+
+            <button class="nav-item active" data-page="homePage">
+                <span class="nav-icon">⌂</span>
+                <span>Главная</span>
+            </button>
+
+            <button class="nav-item" data-page="workoutsPage">
+                <span class="nav-icon">🏋</span>
+                <span>Тренировки</span>
+            </button>
+
+            <button class="nav-item" data-page="progressPage">
+                <span class="nav-icon">📈</span>
+                <span>Прогресс</span>
+            </button>
+
+            <button class="nav-item" data-page="goalsPage">
+                <span class="nav-icon">🎯</span>
+                <span>Цели</span>
+            </button>
+
+            <button class="nav-item" data-page="guidesPage">
+                <span class="nav-icon">📚</span>
+                <span>Гайды</span>
+            </button>
+
+        </nav>
+
+    </div>
+
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>
