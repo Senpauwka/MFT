@@ -244,6 +244,9 @@ function loadData() {
                 ...parsedData.stats
             };
         }
+        if (parsedData.history) {
+            appData.history = parsedData.history;
+        }
 
     } catch (error) {
 
