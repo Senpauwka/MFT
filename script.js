@@ -1522,3 +1522,208 @@ renderCurrentExercise = function () {
     }
 
 };
+
+/* =========================================================
+   ПРОГРЕСС — V1
+   Подключение страницы прогресса к истории тренировок
+========================================================= */
+
+
+/* =========================================================
+   ПОЛУЧЕНИЕ ИСТОРИИ
+========================================================= */
+
+function getHistory() {
+
+    if (!Array.isArray(appData.history)) {
+        appData.history = [];
+    }
+
+    return appData.history;
+}
+
+
+/* =========================================================
+   ОБЩАЯ СТАТИСТИКА ПРОГРЕССА
+========================================================= */
+
+function calculateProgress() {
+
+    const history = getHistory();
+
+
+    let totalMinutes = 0;
+
+    let totalExercises = 0;
+
+    let totalSets = 0;
+
+
+    history.forEach(workout => {
+
+        totalMinutes += Number(workout.duration) || 0;
+
+
+        if (!Array.isArray(workout.exercises)) {
+            return;
+        }
+
+
+        workout.exercises.forEach(exercise => {
+
+            totalExercises++;
+
+
+            if (Array.isArray(exercise.values)) {
+
+                totalSets +=
+                    exercise.values.length;
+
+            }
+
+        });
+
+    });
+
+
+    return {
+
+        workouts: history.length,
+
+        minutes: totalMinutes,
+
+        exercises: totalExercises,
+
+        sets: totalSets
+
+    };
+
+}
+
+
+/* =========================================================
+   ЛУЧШИЕ РЕЗУЛЬТАТЫ ПО УПРАЖНЕНИЯМ
+========================================================= */
+
+function calculateExerciseRecords() {
+
+    const history = getHistory();
+
+    const records = {};
+
+
+    history.forEach(workout => {
+
+        if (!Array.isArray(workout.exercises)) {
+            return;
+        }
+
+
+        workout.exercises.forEach(exercise => {
+
+            if (!exercise.exercise) {
+                return;
+            }
+
+
+            if (!Array.isArray(exercise.values)) {
+                return;
+            }
+
+
+            const best =
+                Math.max(
+                    ...exercise.values.map(
+                        value => Number(value) || 0
+                    )
+                );
+
+
+            if (
+                !records[exercise.exercise] ||
+                best > records[exercise.exercise]
+            ) {
+
+                records[exercise.exercise] =
+                    best;
+
+            }
+
+        });
+
+    });
+
+
+    return records;
+
+}
+
+
+/* =========================================================
+   ПОСЛЕДНИЕ ТРЕНИРОВКИ
+========================================================= */
+
+function getRecentWorkouts(limit = 5) {
+
+    const history = getHistory();
+
+
+    return [...history]
+
+        .sort(
+            (a, b) =>
+                new Date(b.date) -
+                new Date(a.date)
+        )
+
+        .slice(0, limit);
+
+}
+
+
+/* =========================================================
+   ОБНОВЛЕНИЕ ПРОГРЕССА
+========================================================= */
+
+function updateProgressPage() {
+
+    const progress =
+        calculateProgress();
+
+
+    console.log(
+        "📊 ПРОГРЕСС:",
+        progress
+    );
+
+
+    console.log(
+        "🏆 РЕКОРДЫ:",
+        calculateExerciseRecords()
+    );
+
+
+    console.log(
+        "📅 ПОСЛЕДНИЕ ТРЕНИРОВКИ:",
+        getRecentWorkouts()
+    );
+
+}
+
+
+/* =========================================================
+   ОБНОВЛЕНИЕ ПОСЛЕ ТРЕНИРОВКИ
+========================================================= */
+
+const oldUpdateStats =
+    updateStats;
+
+
+updateStats = function () {
+
+    oldUpdateStats();
+
+
+    updateProgressPage();
+
+};
