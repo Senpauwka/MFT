@@ -939,3 +939,70 @@ button {
     color: var(--text);
 }
 
+/* =========================================================
+   ГАЙДЫ
+========================================================= */
+
+.guide-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--surface-light);
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.guide-link:hover {
+    background: rgba(124, 108, 255, 0.12);
+    border-color: rgba(124, 108, 255, 0.35);
+    transform: translateY(-1px);
+}
+
+
+.guide-link:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   АДАПТАЦИЯ ГАЙДОВ ДЛЯ ТЕЛЕФОНА
+========================================================= */
+
+@media (max-width: 600px) {
+
+    #guidesPage .exercise-item {
+        gap: 10px;
+    }
+
+    #guidesPage .exercise-item > div {
+        min-width: 0;
+    }
+
+    #guidesPage .exercise-item strong,
+    #guidesPage .exercise-item span {
+        overflow-wrap: anywhere;
+    }
+
+    #guidesPage .guide-link {
+        flex-shrink: 0;
+    }
+
+}
