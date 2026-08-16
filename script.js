@@ -1851,3 +1851,140 @@ updateStats = function () {
     updateProgressPage();
 
 };
+
+/* =========================================================
+   ЖИВОЙ ПРОГРЕСС
+========================================================= */
+
+function updateProgressPage() {
+
+    if (!appData.history) {
+        appData.history = [];
+    }
+
+
+    const progressPage =
+        document.getElementById("progressPage");
+
+    if (!progressPage) {
+        return;
+    }
+
+
+    /* ================================================
+       ОБЩАЯ СТАТИСТИКА
+    ================================================ */
+
+    const statCards =
+        progressPage.querySelectorAll(".stat-card");
+
+    if (statCards.length >= 4) {
+
+        statCards[0]
+            .querySelector("strong")
+            .textContent =
+            appData.stats.workouts;
+
+        statCards[1]
+            .querySelector("strong")
+            .textContent =
+            appData.stats.streak;
+
+        statCards[2]
+            .querySelector("strong")
+            .textContent =
+            appData.stats.records;
+
+        statCards[3]
+            .querySelector("strong")
+            .textContent =
+            appData.stats.minutes;
+    }
+
+
+    /* ================================================
+       ПОСЛЕДНИЕ ТРЕНИРОВКИ
+    ================================================ */
+
+    const activityCard =
+        progressPage.querySelector(
+            ".workout-day-card:last-of-type"
+        );
+
+    if (!activityCard) {
+        return;
+    }
+
+
+    const activityText =
+        activityCard.querySelector(".goal-description");
+
+    if (!activityText) {
+        return;
+    }
+
+
+    if (appData.history.length === 0) {
+
+        activityText.textContent =
+            "Здесь будут отображаться завершённые тренировки и результаты упражнений.";
+
+        return;
+    }
+
+
+    const recent =
+        [...appData.history]
+            .reverse()
+            .slice(0, 5);
+
+
+    activityText.innerHTML =
+        recent.map(workout => {
+
+            const date =
+                new Date(workout.date)
+                    .toLocaleDateString("ru-RU");
+
+            return `
+                <div style="
+                    padding: 10px 0;
+                    border-bottom: 1px solid var(--border);
+                ">
+                    <strong>
+                        ${workout.workout}
+                    </strong>
+
+                    <br>
+
+                    <span style="
+                        color: var(--muted);
+                        font-size: 12px;
+                    ">
+                        ${date} · ${workout.duration} мин.
+                    </span>
+                </div>
+            `;
+
+        }).join("");
+}
+
+
+/* =========================================================
+   ОБНОВЛЕНИЕ ПРОГРЕССА ПРИ ОТКРЫТИИ
+========================================================= */
+
+document.addEventListener("click", function (event) {
+
+    const button =
+        event.target.closest(
+            '.nav-item[data-page="progressPage"]'
+        );
+
+    if (!button) {
+        return;
+    }
+
+    updateProgressPage();
+
+});
