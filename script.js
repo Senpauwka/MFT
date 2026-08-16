@@ -926,15 +926,6 @@ function finishWorkout() {
 
     appData.stats.minutes += minutes;
 
-appData.history.push({
-    date: new Date().toISOString(),
-
-    workout: currentWorkout.title,
-
-    exercises: currentExerciseResults,
-
-    duration: minutes
-});
 
     saveData();
 
