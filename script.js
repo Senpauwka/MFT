@@ -1228,3 +1228,201 @@ document.addEventListener(
 
     }
 );
+
+/* =========================================================
+   ИСТОРИЯ ТРЕНИРОВОК — V1
+========================================================= */
+
+
+/*
+    Убеждаемся, что история существует.
+    Она будет храниться внутри appData и автоматически
+    попадать в localStorage через существующий saveData().
+*/
+
+if (!appData.history) {
+    appData.history = [];
+}
+
+
+/* =========================================================
+   СОХРАНЕНИЕ ЗАВЕРШЁННОЙ ТРЕНИРОВКИ
+========================================================= */
+
+function saveWorkoutToHistory(minutes) {
+
+    if (!currentWorkout) {
+        return;
+    }
+
+
+    const workoutRecord = {
+
+        id: Date.now(),
+
+        date: new Date().toISOString(),
+
+        title: currentWorkout.title,
+
+        icon: currentWorkout.icon,
+
+        duration: minutes,
+
+        exercises: currentExerciseResults.map(result => ({
+
+            exercise: result.exercise,
+
+            values: [...result.values]
+
+        }))
+
+    };
+
+
+    appData.history.push(workoutRecord);
+
+
+    saveData();
+
+
+    console.log(
+        "Тренировка сохранена в историю:",
+        workoutRecord
+    );
+
+}
+
+
+/* =========================================================
+   ПЕРЕХВАТ ЗАВЕРШЕНИЯ ТРЕНИРОВКИ
+========================================================= */
+
+
+/*
+    Сохраняем оригинальную функцию finishWorkout,
+    не ломая существующую систему.
+*/
+
+const originalFinishWorkout =
+    finishWorkout;
+
+
+finishWorkout = function () {
+
+    /*
+        Считаем длительность здесь заранее,
+        потому что оригинальная функция после завершения
+        очищает currentWorkout.
+    */
+
+    const endTime = Date.now();
+
+
+    const minutes =
+        Math.max(
+            1,
+            Math.round(
+                (endTime - workoutStartedAt) /
+                60000
+            )
+        );
+
+
+    /*
+        Сначала сохраняем всю тренировку
+        вместе со всеми упражнениями и подходами.
+    */
+
+    saveWorkoutToHistory(minutes);
+
+
+    /*
+        После этого запускаем существующее завершение.
+        Ничего из старой логики не удаляем.
+    */
+
+    originalFinishWorkout();
+
+};
+
+
+/* =========================================================
+   ЗАГРУЗКА ИСТОРИИ ИЗ LOCAL STORAGE
+========================================================= */
+
+
+/*
+    Существующий loadData() уже загружает stats.
+    Здесь дополнительно восстанавливаем history.
+*/
+
+const originalLoadData =
+    loadData;
+
+
+loadData = function () {
+
+    originalLoadData();
+
+
+    const savedData =
+        localStorage.getItem("myFitnessData");
+
+
+    if (!savedData) {
+        return;
+    }
+
+
+    try {
+
+        const parsedData =
+            JSON.parse(savedData);
+
+
+        if (
+            parsedData.history &&
+            Array.isArray(parsedData.history)
+        ) {
+
+            appData.history =
+                parsedData.history;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Не удалось загрузить историю тренировок:",
+            error
+        );
+
+    }
+
+};
+
+
+/* =========================================================
+   ИНФОРМАЦИЯ ДЛЯ ПРОВЕРКИ
+========================================================= */
+
+function getWorkoutHistory() {
+
+    return appData.history || [];
+
+}
+
+
+/* =========================================================
+   ТЕСТ ИСТОРИИ
+========================================================= */
+
+function debugWorkoutHistory() {
+
+    console.log(
+        "📚 ИСТОРИЯ ТРЕНИРОВОК:",
+        getWorkoutHistory()
+    );
+
+}
