@@ -1426,3 +1426,99 @@ function debugWorkoutHistory() {
     );
 
 }
+
+/* =========================================================
+   FIX — КОРРЕКТНОЕ ОБНОВЛЕНИЕ НАЗВАНИЯ УПРАЖНЕНИЯ
+========================================================= */
+
+const previousRenderCurrentExercise =
+    renderCurrentExercise;
+
+
+renderCurrentExercise = function () {
+
+    previousRenderCurrentExercise();
+
+
+    if (!currentWorkout) {
+        return;
+    }
+
+
+    const screen =
+        document.getElementById("activeWorkoutScreen");
+
+
+    if (!screen) {
+        return;
+    }
+
+
+    const exerciseName =
+        currentWorkout.exercises[currentExerciseIndex];
+
+
+    /*
+        Ищем элемент ИМЕННО внутри активного экрана.
+        Это защищает нас от другого элемента с таким же ID
+        где-нибудь в HTML.
+    */
+
+    const nameElement =
+        screen.querySelector("#activeExerciseName");
+
+
+    if (nameElement) {
+
+        nameElement.textContent =
+            exerciseName;
+
+    }
+
+
+    const musclesElement =
+        screen.querySelector("#activeExerciseMuscles");
+
+
+    const details =
+        exerciseDetails[exerciseName];
+
+
+    if (
+        musclesElement &&
+        details
+    ) {
+
+        musclesElement.textContent =
+            details.muscles;
+
+    }
+
+
+    const targetElement =
+        screen.querySelector("#activeExerciseTarget");
+
+
+    if (
+        targetElement &&
+        details
+    ) {
+
+        targetElement.textContent =
+            `${details.sets} × ${details.min}–${details.max}${details.unit ? " " + details.unit : ""}`;
+
+    }
+
+
+    const progressElement =
+        screen.querySelector("#activeWorkoutProgress");
+
+
+    if (progressElement) {
+
+        progressElement.textContent =
+            `Упражнение ${currentExerciseIndex + 1} из ${currentWorkout.exercises.length}`;
+
+    }
+
+};
