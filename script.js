@@ -193,23 +193,62 @@ function updateTodayWorkout() {
 
 function updateStats() {
 
-    const statCards = document.querySelectorAll(".stat-card");
+    /* =========================
+       ГЛАВНАЯ
+    ========================= */
 
-    if (statCards.length < 4) {
-        return;
+    const homeStats =
+        document.querySelector("#homePage .stats-grid");
+
+    if (homeStats) {
+
+        const cards =
+            homeStats.querySelectorAll(".stat-card");
+
+        if (cards.length >= 4) {
+
+            cards[0].querySelector("strong").textContent =
+                appData.stats.workouts;
+
+            cards[1].querySelector("strong").textContent =
+                appData.stats.streak;
+
+            cards[2].querySelector("strong").textContent =
+                appData.stats.records;
+
+            cards[3].querySelector("strong").textContent =
+                appData.stats.minutes;
+        }
     }
 
-    statCards[0].querySelector("strong").textContent =
-        appData.stats.workouts;
 
-    statCards[1].querySelector("strong").textContent =
-        appData.stats.streak;
+    /* =========================
+       ПРОГРЕСС
+    ========================= */
 
-    statCards[2].querySelector("strong").textContent =
-        appData.stats.records;
+    const progressStats =
+        document.querySelector("#progressPage .stats-grid");
 
-    statCards[3].querySelector("strong").textContent =
-        appData.stats.minutes;
+    if (progressStats) {
+
+        const cards =
+            progressStats.querySelectorAll(".stat-card");
+
+        if (cards.length >= 4) {
+
+            cards[0].querySelector("strong").textContent =
+                appData.stats.workouts;
+
+            cards[1].querySelector("strong").textContent =
+                appData.stats.streak;
+
+            cards[2].querySelector("strong").textContent =
+                appData.stats.records;
+
+            cards[3].querySelector("strong").textContent =
+                appData.stats.minutes;
+        }
+    }
 }
 
 
