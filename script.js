@@ -1504,3 +1504,79 @@ document.addEventListener(
     },
     true
 );
+
+/* =========================================================
+   FIX: КНОПКА ТРЕНИРОВКИ НА ГЛАВНОЙ
+========================================================= */
+
+(function () {
+
+    const mainButton = document.querySelector(
+        ".today-card .primary-button"
+    );
+
+    if (!mainButton) {
+        return;
+    }
+
+    /* Убираем старый обработчик кнопки */
+    const newButton = mainButton.cloneNode(true);
+    mainButton.replaceWith(newButton);
+
+    newButton.addEventListener("click", () => {
+
+        const day = new Date().getDay();
+
+        /*
+            1 = понедельник
+            3 = среда
+            5 = пятница
+        */
+
+        let workoutIndex = -1;
+
+        if (day === 1) {
+            workoutIndex = 0;
+        }
+
+        if (day === 3) {
+            workoutIndex = 1;
+        }
+
+        if (day === 5) {
+            workoutIndex = 2;
+        }
+
+        /* День восстановления */
+        if (workoutIndex === -1) {
+
+            alert(
+                "Сегодня день восстановления 🧘\n\n" +
+                "Отдых тоже является частью прогресса."
+            );
+
+            return;
+        }
+
+        /*
+            Переходим в раздел тренировок
+            и запускаем нужную тренировку
+        */
+
+        showPage("workoutsPage");
+
+        const workoutButtons =
+            document.querySelectorAll(
+                ".workout-start-button"
+            );
+
+        const workoutButton =
+            workoutButtons[workoutIndex];
+
+        if (workoutButton) {
+            workoutButton.click();
+        }
+
+    });
+
+})();
