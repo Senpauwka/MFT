@@ -852,6 +852,31 @@ function finishWorkout() {
             )
         );
 
+    /* =====================================================
+       СОХРАНЕНИЕ ЗАВЕРШЁННОЙ ТРЕНИРОВКИ
+    ====================================================== */
+
+    if (!appData.history) {
+        appData.history = [];
+    }
+
+    appData.history.push({
+
+        id: Date.now(),
+
+        date: new Date().toISOString(),
+
+        workout: currentWorkout.title,
+
+        exercises: currentExerciseResults.map(result => ({
+            exercise: result.exercise,
+            values: [...result.values]
+        })),
+
+        duration: minutes
+
+    });
+
 
     appData.stats.workouts += 1;
 
@@ -1128,6 +1153,102 @@ renderCurrentExercise = function () {
 
 };
 
+/* =========================================================
+   ОБНОВЛЕНИЕ ЭКРАНА АКТИВНОЙ ТРЕНИРОВКИ
+========================================================= */
+
+function updateActiveWorkoutDisplay() {
+
+    if (!currentWorkout) {
+        return;
+    }
+
+    const exerciseName =
+        currentWorkout.exercises[currentExerciseIndex];
+
+    const details =
+        exerciseDetails[exerciseName];
+
+    const nameElement =
+        document.getElementById("activeExerciseName");
+
+    const musclesElement =
+        document.getElementById("activeExerciseMuscles");
+
+    const iconElement =
+        document.getElementById("activeExerciseIcon");
+
+    const progressElement =
+        document.getElementById("exerciseProgress");
+
+    const progressFill =
+        document.getElementById("workoutProgressFill");
+
+
+    /* Название упражнения */
+
+    if (nameElement) {
+        nameElement.textContent = exerciseName;
+    }
+
+
+    /* Мышцы */
+
+    if (musclesElement && details) {
+        musclesElement.textContent = details.muscles;
+    }
+
+
+    /* Иконка */
+
+    if (iconElement) {
+        iconElement.textContent =
+            exerciseIcons[exerciseName] || "💪";
+    }
+
+
+    /* Прогресс */
+
+    const total =
+        currentWorkout.exercises.length;
+
+    const current =
+        currentExerciseIndex + 1;
+
+    if (progressElement) {
+        progressElement.textContent =
+            `${current} / ${total}`;
+    }
+
+
+    if (progressFill) {
+
+        const percent =
+            (current / total) * 100;
+
+        progressFill.style.width =
+            `${percent}%`;
+    }
+
+}
+
+
+/* =========================================================
+   ПЕРЕХОД К СЛЕДУЮЩЕМУ УПРАЖНЕНИЮ
+========================================================= */
+
+const originalSaveCurrentExercise =
+    saveCurrentExercise;
+
+saveCurrentExercise = function () {
+
+    originalSaveCurrentExercise();
+
+    if (currentWorkout) {
+        updateActiveWorkoutDisplay();
+    }
+
+};
 
 /* =========================================================
    КНОПКИ "НАЧАТЬ ТРЕНИРОВКУ"
