@@ -256,39 +256,6 @@ function loadData() {
 }
 
 
-/* =========================================================
-   КНОПКА "НАЧАТЬ ТРЕНИРОВКУ"
-========================================================= */
-
-const startWorkoutButton =
-    document.querySelector(".primary-button");
-
-
-if (startWorkoutButton) {
-
-    startWorkoutButton.addEventListener("click", () => {
-
-        const workout = getTodayWorkout();
-
-        if (!workout) {
-
-            alert(
-                "Сегодня день восстановления 🧘\n\n" +
-                "Отдых тоже является частью прогресса."
-            );
-
-            return;
-        }
-
-        alert(
-            `Сегодня: ${workout.title}\n\n` +
-            `Упражнений: ${workout.exercises.length}\n\n` +
-            "Следующим этапом сделаем полноценный режим тренировки."
-        );
-
-    });
-
-}
 
 
 /* =========================================================
@@ -312,39 +279,7 @@ function init() {
 
 document.addEventListener("DOMContentLoaded", init);
 
-/* =========================================================
-   КНОПКИ ТРЕНИРОВОК
-========================================================= */
 
-const workoutButtons =
-    document.querySelectorAll(".workout-start-button");
-
-
-workoutButtons.forEach((button, index) => {
-
-    button.addEventListener("click", () => {
-
-        const workouts = [
-            appData.workouts.monday,
-            appData.workouts.wednesday,
-            appData.workouts.friday
-        ];
-
-        const workout = workouts[index];
-
-        if (!workout) {
-            return;
-        }
-
-        alert(
-            `${workout.icon} ${workout.title}\n\n` +
-            `Упражнений: ${workout.exercises.length}\n\n` +
-            "Следующим этапом здесь появится полноценный режим тренировки."
-        );
-
-    });
-
-});
 
 /* =========================================================
    НАДЁЖНАЯ НАВИГАЦИЯ СТРАНИЦ
@@ -1135,420 +1070,150 @@ document.addEventListener(
 );
 
 /* =========================================================
-   АКТИВНАЯ ТРЕНИРОВКА
+   ДОПОЛНИТЕЛЬНАЯ НАСТРОЙКА АКТИВНОЙ ТРЕНИРОВКИ
 ========================================================= */
 
-let activeWorkout = null;
-let activeExerciseIndex = 0;
+const exerciseIcons = {
 
-
-/* Данные упражнений */
-
-const exerciseDetails = {
-
-    "Подтягивания": {
-        icon: "🪽",
-        muscles: "Спина · Бицепс",
-        sets: 4
-    },
-
-    "Отжимания": {
-        icon: "🫀",
-        muscles: "Грудь · Трицепс · Плечи",
-        sets: 4
-    },
-
-    "Брусья": {
-        icon: "🔱",
-        muscles: "Грудь · Трицепс",
-        sets: 3
-    },
-
-    "Пайк-отжимания": {
-        icon: "🏋️",
-        muscles: "Плечи · Трицепс",
-        sets: 3
-    },
-
-    "Подъёмы ног": {
-        icon: "🧱",
-        muscles: "Пресс · Корпус",
-        sets: 3
-    },
-
-    "Болгарские приседания": {
-        icon: "🦵",
-        muscles: "Квадрицепс · Ягодицы",
-        sets: 3
-    },
-
-    "Приседания": {
-        icon: "🦵",
-        muscles: "Ноги · Ягодицы",
-        sets: 3
-    },
-
-    "Выпады": {
-        icon: "🦵",
-        muscles: "Ноги · Ягодицы",
-        sets: 3
-    },
-
-    "Подъёмы на носки": {
-        icon: "🦶",
-        muscles: "Икры",
-        sets: 3
-    },
-
-    "Планка": {
-        icon: "🧱",
-        muscles: "Пресс · Корпус",
-        sets: 3
-    },
-
-    "Пресс": {
-        icon: "🧱",
-        muscles: "Корпус",
-        sets: 3
-    }
+    "Подтягивания": "🪽",
+    "Отжимания": "🫀",
+    "Брусья": "🔱",
+    "Пайк-отжимания": "🏋️",
+    "Подъёмы ног": "🧱",
+    "Болгарские приседания": "🦵",
+    "Приседания": "🦵",
+    "Выпады": "🦵",
+    "Подъёмы на носки": "🦶",
+    "Планка": "🧱",
+    "Пресс": "🧱",
+    "Отжимания с усложнением": "💪"
 
 };
 
 
 /* =========================================================
-   ПОКАЗ АКТИВНОЙ ТРЕНИРОВКИ
+   ИКОНКА ТЕКУЩЕГО УПРАЖНЕНИЯ
 ========================================================= */
 
-function startWorkout(workout) {
-
-    if (!workout) {
-        return;
-    }
-
-    activeWorkout = workout;
-
-    activeExerciseIndex = 0;
-
-    showPage("activeWorkoutPage");
-
-    renderActiveExercise();
-}
-
-
-/* =========================================================
-   ОТРИСОВКА УПРАЖНЕНИЯ
-========================================================= */
-
-function renderActiveExercise() {
-
-    if (!activeWorkout) {
-        return;
-    }
-
-    const exerciseName =
-        activeWorkout.exercises[activeExerciseIndex];
-
-    const details =
-        exerciseDetails[exerciseName] || {
-            icon: "💪",
-            muscles: "Мышцы корпуса",
-            sets: 3
-        };
-
-
-    const title =
-        document.getElementById("activeWorkoutTitle");
-
-    const subtitle =
-        document.getElementById("activeWorkoutSubtitle");
+function updateExerciseIcon() {
 
     const icon =
         document.getElementById("activeExerciseIcon");
 
-    const name =
-        document.getElementById("activeExerciseName");
-
-    const muscles =
-        document.getElementById("activeExerciseMuscles");
-
-    const progress =
-        document.getElementById("exerciseProgress");
-
-    const progressFill =
-        document.getElementById("workoutProgressFill");
-
-    const setList =
-        document.getElementById("setList");
-
-
-    title.textContent = activeWorkout.title;
-
-    subtitle.textContent =
-        "Делай чисто. Не спеши. Качество важнее количества.";
-
-    icon.textContent = details.icon;
-
-    name.textContent = exerciseName;
-
-    muscles.textContent = details.muscles;
-
-
-    const current =
-        activeExerciseIndex + 1;
-
-    const total =
-        activeWorkout.exercises.length;
-
-
-    progress.textContent =
-        `${current} / ${total}`;
-
-
-    progressFill.style.width =
-        `${(current / total) * 100}%`;
-
-
-    setList.innerHTML = "";
-
-
-    for (let i = 1; i <= details.sets; i++) {
-
-        const row =
-            document.createElement("div");
-
-        row.className = "set-row";
-
-        row.innerHTML = `
-            <span>Подход ${i}</span>
-            <strong>Готов</strong>
-        `;
-
-        setList.appendChild(row);
+    if (!icon || !currentWorkout) {
+        return;
     }
 
+    const exerciseName =
+        currentWorkout.exercises[currentExerciseIndex];
+
+    icon.textContent =
+        exerciseIcons[exerciseName] || "💪";
+
 }
 
 
 /* =========================================================
-   ЗАВЕРШЕНИЕ УПРАЖНЕНИЯ
+   ДОБАВЛЕНИЕ ИКОНКИ К СУЩЕСТВУЮЩЕМУ ЭКРАНУ
 ========================================================= */
 
-const completeExerciseButton =
-    document.getElementById("completeExerciseButton");
+const originalRenderCurrentExercise =
+    renderCurrentExercise;
 
+renderCurrentExercise = function () {
 
-if (completeExerciseButton) {
+    originalRenderCurrentExercise();
 
-    completeExerciseButton.addEventListener(
-        "click",
-        () => {
+    updateExerciseIcon();
 
-            if (!activeWorkout) {
-                return;
-            }
-
-
-            activeExerciseIndex++;
-
-
-            if (
-                activeExerciseIndex >=
-                activeWorkout.exercises.length
-            ) {
-
-                alert(
-                    "🔥 Тренировка завершена!\n\n" +
-                    "Красиво отработал. Теперь сохраняем результат."
-                );
-
-                activeWorkout = null;
-
-                showPage("homePage");
-
-                return;
-            }
-
-
-            renderActiveExercise();
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-        }
-    );
-
-}
+};
 
 
 /* =========================================================
-   ВЫХОД ИЗ ТРЕНИРОВКИ
-========================================================= */
-
-const exitWorkoutButton =
-    document.getElementById("exitWorkoutButton");
-
-
-if (exitWorkoutButton) {
-
-    exitWorkoutButton.addEventListener(
-        "click",
-        () => {
-
-            const confirmExit =
-                confirm(
-                    "Выйти из текущей тренировки?"
-                );
-
-            if (!confirmExit) {
-                return;
-            }
-
-            activeWorkout = null;
-
-            showPage("homePage");
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ПЕРЕХВАТ КНОПОК "НАЧАТЬ ТРЕНИРОВКУ"
+   КНОПКИ "НАЧАТЬ ТРЕНИРОВКУ"
 ========================================================= */
 
 document.addEventListener(
     "click",
-    (event) => {
+    function (event) {
 
         const button =
             event.target.closest(
-                ".primary-button"
+                ".workout-start-button"
             );
-
 
         if (!button) {
             return;
         }
 
 
-        /*
-            Кнопки внутри карточек Пн / Ср / Пт
-        */
-
-        if (
-            button.classList.contains(
-                "workout-start-button"
-            )
-        ) {
-
-            const cards =
+        const cards =
+            Array.from(
                 document.querySelectorAll(
                     ".workout-day-card"
-                );
-
-            const card =
-                button.closest(
-                    ".workout-day-card"
-                );
-
-            const index =
-                Array.from(cards).indexOf(card);
-
-
-            const workouts = [
-                appData.workouts.monday,
-                appData.workouts.wednesday,
-                appData.workouts.friday
-            ];
-
-
-            startWorkout(
-                workouts[index]
+                )
             );
 
+
+        const card =
+            button.closest(
+                ".workout-day-card"
+            );
+
+
+        const index =
+            cards.indexOf(card);
+
+
+        const workouts = [
+
+            appData.workouts.monday,
+
+            appData.workouts.wednesday,
+
+            appData.workouts.friday
+
+        ];
+
+
+        const workout =
+            workouts[index];
+
+
+        if (!workout) {
             return;
         }
 
 
-        /*
-            Кнопка "Начать тренировку"
-            на главной странице
-        */
+        startWorkout(workout);
 
-        if (
-            button.closest(".today-card")
-        ) {
-
-            const workout =
-                getTodayWorkout();
-
-
-            if (!workout) {
-
-                alert(
-                    "Сегодня день восстановления 🧘\n\n" +
-                    "Отдых тоже является частью прогресса."
-                );
-
-                return;
-            }
-
-
-            startWorkout(workout);
-
-        }
-
-    },
-    true
+    }
 );
 
+
 /* =========================================================
-   FIX: КНОПКА ТРЕНИРОВКИ НА ГЛАВНОЙ
+   КНОПКА ТРЕНИРОВКИ НА ГЛАВНОЙ
 ========================================================= */
 
-(function () {
+document.addEventListener(
+    "click",
+    function (event) {
 
-    const mainButton = document.querySelector(
-        ".today-card .primary-button"
-    );
+        const button =
+            event.target.closest(
+                ".today-card .primary-button"
+            );
 
-    if (!mainButton) {
-        return;
-    }
-
-    /* Убираем старый обработчик кнопки */
-    const newButton = mainButton.cloneNode(true);
-    mainButton.replaceWith(newButton);
-
-    newButton.addEventListener("click", () => {
-
-        const day = new Date().getDay();
-
-        /*
-            1 = понедельник
-            3 = среда
-            5 = пятница
-        */
-
-        let workoutIndex = -1;
-
-        if (day === 1) {
-            workoutIndex = 0;
+        if (!button) {
+            return;
         }
 
-        if (day === 3) {
-            workoutIndex = 1;
-        }
 
-        if (day === 5) {
-            workoutIndex = 2;
-        }
+        const workout =
+            getTodayWorkout();
 
-        /* День восстановления */
-        if (workoutIndex === -1) {
+
+        if (!workout) {
 
             alert(
                 "Сегодня день восстановления 🧘\n\n" +
@@ -1558,25 +1223,8 @@ document.addEventListener(
             return;
         }
 
-        /*
-            Переходим в раздел тренировок
-            и запускаем нужную тренировку
-        */
 
-        showPage("workoutsPage");
+        startWorkout(workout);
 
-        const workoutButtons =
-            document.querySelectorAll(
-                ".workout-start-button"
-            );
-
-        const workoutButton =
-            workoutButtons[workoutIndex];
-
-        if (workoutButton) {
-            workoutButton.click();
-        }
-
-    });
-
-})();
+    }
+);
