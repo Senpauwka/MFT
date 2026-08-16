@@ -47,12 +47,14 @@ const appData = {
         }
     },
 
-    stats: {
+        stats: {
         workouts: 0,
         streak: 0,
         records: 0,
         minutes: 0
-    }
+    },
+
+    history: []
 };
 
 
